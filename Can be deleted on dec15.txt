@@ -1,0 +1,46 @@
+-----
+in intial sheet
+past script code in new excecl sheet and check if any code is going to b,c,d.... columns. if so and need those code then have to move to column a manually.
+
+then paste the code in formula excel sheet
+. replace =--Primary Key Section with primary key section. do same for =--Foreign Keys Section with Foreign Keys Section
+after above step in column b formula remove commented keys (search for --,) and unnecessary rows
+------------------------
+
+in analyze inital sheet results
+3. make sure 
+		[source].[bistageload_sourcedb] has [source]. term init 
+		any other columns should NOT have alias name [acd_det].[column name]
+		watch for CASE WHEN UPPER([AP_TYPE]) = 'CK' THEN UPPER(CONCAT('[' , [BIStageLoad_SourceDB] , '][' , [AP_DOMAIN] , '][' , [AP_REF] , ']'))
+				ELSE NULL END AS [BI_Transformed_Column > Accounts Payable Check Master Key] --Accounts Payable II (Checks) type colums and handle manually
+				
+-------------------------------
+IN FINAL FORMULA 	sheet	
+	filter e column with -- and filter e col with #value and check a column values, also see manually ifany inconsistencies. if found try handing those rows manually
+	have to handle placing primary and foreign key term manually in column no 'BJ'
+
+--------------------------
+1 copy results from final formula sheet and paste in sql server replace ', no value' with empty.
+2 validate atleast one or two views keys manaully.
+3 noticed cm_mstr as table name in ad_mstr code, because of these 3 columns
+		(upper(concat(source.bistageload_sourcedb,cm_domain,cm_slspsn##1)) as [bi_transform_coumn >  dealer representative master key]
+4. find for -- and #VALUE! in the code. if find anything handle manually
+5 replace primary key section with --primary ke section and do same for fk also.
+-----------------------------------
+
+Handle manually
+Exceptional cases need to handle manually
+O. ISNULL, NULLIF, case when, rtrim, ltrim, datapart(year,
+DONE 1. ISNULL(NULLIF(RTRIM([AD_REF]), ''), [AD_ADDR], ']' #tHIS IS [BI_TRANSFORMED_COLUMN > CUSTOMER MASTER KEY] COLUMN IN TRANSFORMER.QAD_AD_MSTR
+DONE 2. noticed cm_mstr as table name in ad_mstr code, because of these 3 columns
+		(upper(concat(source.bistageload_sourcedb,cm_domain,cm_slspsn##1)) as [bi_transform_coumn >  dealer representative master key]
+		(upper(concat(source.bistageload_sourcedb,cm_domain,cm_slspsn##2)) as [bi_transform_coumn >  territory salses manager master key]
+		(upper(concat(source.bistageload_sourcedb,cm_domain,cm_slspsn##4)) as [bi_transform_coumn >  salesperson master key]
+		(upper(concat(source.bistageload_sourcedb,cm_domain,cm_slspsn##3)) as [bi_transform_coumn >  inside sales representative master key]
+done 3. I have supported for 10 columns in my excel formual. any row more than 10 columns needs to handle manually (can be automated by checking the no.of '[' in a row).
+done 4. hardcoded first3or2letters_mstr. have to manually check if a table have mstr or def or ...(example acd_det will be inserted as acd_mstr)
+done 5. check for CASE WHEN UPPER([AP_TYPE]) = 'CK' THEN UPPER(CONCAT('[' , [BIStageLoad_SourceDB] , '][' , [AP_DOMAIN] , '][' , [AP_REF] , ']'))ELSE NULL END AS [BI_Transformed_Column > Accounts Payable Check Master Key] --Accounts Payable II (Checks) columns in the last and handle manually
+done 6. finally manually check in the table if for a instead of pk term fk is uses or vice versa.	checkc count of pk for each table and check manually	
+DONE 9. some places term foreign keys section has been written as foreign keys
+DONE 10. in tr_hist they is a comment like "":can also be used for...." my formula picked commented one.
+
